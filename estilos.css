@@ -48,12 +48,12 @@ h1, h2, h3, .navbar-brand, .titulo-seccion {
   color: #fff !important;
 }
 
-/* En el intro y el indice se oculta la barra (la clase la pone el JS) */
+
 body.sin-nav .navbar { display: none !important; }
 body.sin-nav { padding-top: 0 !important; }
 body.sin-nav .dashboard-page-wrapper { padding-top: 0 !important; }
 
-/* Cajas sin borde ni relleno para paginas de pantalla completa */
+
 .pantalla-completa { border: none !important; box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; }
 body.sin-nav #dashboard-container,
 body.sin-nav .dashboard-page-wrapper,
@@ -118,7 +118,7 @@ body.sin-nav .dashboard-column { padding: 0 !important; margin: 0 !important; }
 .pill:hover .sub, .pill:focus-visible .sub { color: #fff; }
 .enlace-metodo { color: var(--rosa) !important; font-size: 13px; text-decoration: underline; margin-top: 6px; }
 
-/* ---------- Color de fondo de cada seccion (segun el diseno) ---------- */
+/* ---------- Color de fondo de cada seccion ---------- */
 #quien     { background: var(--negro); }
 #locacion  { background: var(--azul); }
 #paradoja  { background: var(--naranja); }
@@ -127,7 +127,7 @@ body.sin-nav .dashboard-column { padding: 0 !important; margin: 0 !important; }
 #simulador { background: var(--negro); }
 #metodo    { background: var(--papel); }
 
-/* Cajas translucidas sobre los fondos de color */
+/* Cajas translucidas  */
 #quien .chart-wrapper, #locacion .chart-wrapper, #finanzas .chart-wrapper,
 #modelo .chart-wrapper, #simulador .chart-wrapper {
   background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18);
@@ -139,7 +139,7 @@ body.sin-nav .dashboard-column { padding: 0 !important; margin: 0 !important; }
 }
 #paradoja .chart-wrapper { background: transparent; }
 
-/* ---------- LA PARADOJA: loteria ---------- */
+/* ---------- LOTERÌA ---------- */
 .loteria-stage { position: absolute; inset: 0; overflow-y: auto; }
 .loteria-contenido { max-width: 1100px; margin: 0 auto; padding: 22px 20px 30px; }
 .loteria-titulo { font-family: 'DM Serif Display', Georgia, serif; font-size: clamp(30px, 3.5vw, 44px); color: #fff; text-align: center; }
@@ -167,7 +167,7 @@ body.sin-nav .dashboard-column { padding: 0 !important; margin: 0 !important; }
 #loteria-premio.visible { display: block; animation: aparecer .6s ease; }
 .premio-tit { font-family: 'DM Serif Display', Georgia, serif; font-size: 30px; }
 
-/* ---------- Secciones (provisional, se llenan en los siguientes pasos) ---------- */
+/* ---------- Secciones  ---------- */
 .pendiente {
   height: 100%; display: flex; flex-direction: column; justify-content: center;
   align-items: center; text-align: center; color: rgba(255,255,255,.75);
@@ -186,7 +186,7 @@ body.sin-nav .dashboard-column { padding: 0 !important; margin: 0 !important; }
   .pill, #btn-explorar, .carta-in { transition: none; }
 }
 
-/* ---------- LOCACION: mapa de estados + panel ---------- */
+/* ---------- LOCACION ---------- */
 #locacion .chart-wrapper { background: transparent !important; border: none !important; }
 .loc-mapa { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 14px; box-sizing: border-box; }
 #mapa-estados { flex: 1; width: 100%; min-height: 0; }
@@ -223,10 +223,10 @@ body.sin-nav .dashboard-column { padding: 0 !important; margin: 0 !important; }
 .lista-fila { fill: #fff; font-size: 13px; font-weight: 600; cursor: pointer; }
 .lista-fila:hover { fill: #9BE3FF; }
 
-/* ---------- Titulo comun de secciones ---------- */
+/* ---------- Titulo de secciones ---------- */
 .sec-titulo { font-family: 'Bricolage Grotesque', sans-serif; font-size: clamp(28px, 3vw, 40px); font-weight: 700; color: #fff; }
 
-/* ---------- QUIEN ES DUENO ---------- */
+/* ---------- DUEÑO ---------- */
 #quien .chart-wrapper { background: transparent !important; border: none !important; }
 .quien-stage { position: absolute; inset: 0; overflow-y: auto; color: #fff; }
 .quien-contenido { max-width: 1250px; margin: 0 auto; padding: 18px 22px 26px; }
