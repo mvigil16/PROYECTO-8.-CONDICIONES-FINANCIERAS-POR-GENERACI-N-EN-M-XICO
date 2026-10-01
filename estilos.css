@@ -393,3 +393,21 @@ body.sin-nav .dashboard-column { padding: 0 !important; margin: 0 !important; }
   .sim-grid, .met-cols { grid-template-columns: 1fr; }
   .angel { display: none; } .sim-contenido { margin-left: 0; }
 }
+
+
+/* ---------- CONCLUSION ---------- */
+#conclusion { background: var(--papel); }
+#conclusion .chart-wrapper { background: transparent !important; border: none !important; }
+.conclusion-stage { min-height: 100%; box-sizing: border-box; overflow-y: auto; color: var(--texto); }
+.conclusion-contenido { max-width: 1120px; margin: 0 auto; padding: 28px 28px 34px; }
+.conclusion-intro { max-width: 880px; font-size: 18px; line-height: 1.5; margin: 6px 0 20px; color: #4A0707; }
+.conclusion-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.conclusion-card { background: #fff; border: 1px solid #F0D9D0; border-radius: 14px; padding: 18px; position: relative; min-height: 190px; box-sizing: border-box; }
+.conclusion-card.destacado { border: 2px solid var(--rojo); }
+.conclusion-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 1px; color: var(--rojo); }
+.conclusion-card h3 { font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px; line-height: 1.15; margin: 8px 0 8px; color: #1A1A1A; }
+.conclusion-card p { font-size: 14px; line-height: 1.5; margin: 0 0 12px; color: #463636; }
+.conclusion-dato { display: inline-block; font-family: 'Bricolage Grotesque', sans-serif; font-size: 28px; font-weight: 700; color: var(--rojo); }
+.conclusion-card small { display: block; font-size: 12px; color: #7A6666; margin-top: 3px; }
+.conclusion-cierre { margin-top: 16px; background: #6E0B0B; color: #fff; border-radius: 12px; padding: 16px 18px; font-size: 15px; line-height: 1.5; }
+@media (max-width: 800px) { .conclusion-grid { grid-template-columns: 1fr; } }
