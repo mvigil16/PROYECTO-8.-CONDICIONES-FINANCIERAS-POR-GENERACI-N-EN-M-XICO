@@ -233,7 +233,8 @@ botones <- list(
   c("#paradoja",  "flechas",   "La paradoja",      "Estrato y educación"),
   c("#finanzas",  "monedas",   "Finanzas",         "Ingresos, gastos y deudas"),
   c("#modelo",    "grafica",   "Modelo",           "Odds ratio y confiabilidad"),
-  c("#simulador", "controles", "Simulador",        "¿Qué pasaría si…?")
+  c("#simulador", "controles", "Simulador",        "¿Qué pasaría si…?"),
+  c("#conclusion", "grafica",  "Conclusión",         "Los hallazgos clave")
 )
 html_boton <- function(b) sprintf(
   '<a class="pill" href="%s">%s<span><span class="nombre">%s</span><span class="sub">%s</span></span></a>',
@@ -423,25 +424,25 @@ Row
 # Las cifras salen de la lista 'paradoja' calculada en el setup.
 p <- paradoja
 cartas <- list(
-  list(1, "El Nopal", "nopal", "#3B6D11", "Estrato bajo",
+  list(1, "El Nopal", "nopal", "#3B6D11", "Estrato 1",
        paste0(f1(p$est1_prop), "%"),
        paste0("son dueños de su casa. ", f0(p$est1_pueblo / 10),
               " de cada 10 viven en pueblos de menos de 2,500 habitantes.")),
-  list(2, "El Catrín", "catrin", "#0B5ED7", "Estrato alto",
+  list(2, "El Catrín", "catrin", "#0B5ED7", "Estrato 4",
        paste0(f1(p$est4_prop), "%"),
        paste0("son dueños. El ", f0(p$est4_ciudad),
-              "% vive en ciudades grandes, donde la vivienda se compra a precio de mercado.")),
-  list(3, "La Escalera", "escalera", "#9B1111", "¿Más estudio, menos casa?",
+              "% vive en ciudades grandes, donde el contexto habitacional es principalmente urbano.")),
+  list(3, "La Escalera", "escalera", "#9B1111", "¿Más estudio, menos propiedad?",
        paste0(f0(p$edu_basica), "% vs ", f0(p$edu_superior), "%"),
-       "Básica o menos contra universidad. A simple vista, estudiar parece restar."),
+       "Básica o menos contra universidad. A simple vista, la relación parece ir en sentido contrario."),
   list(4, "El Birrete", "birrete", "#1a1a1a", "Al comparar parejo",
        paste0("OR ", formatC(p$or_superior, format = "f", digits = 2)),
-       "Con misma edad, lugar e ingreso, la universidad sí aumenta los momios de ser dueño."),
+       "Al controlar por edad, lugar, ingreso y otras variables, la educación superior presenta mayores momios de propiedad."),
   list(5, "El Gorrito", "carriola", "#D4537E", "Con hijos",
        paste0(f0(p$con_menores), "% vs ", f0(p$sin_menores), "%"),
-       paste0("Con menores contra sin menores. En el modelo desaparece (OR ",
+       paste0("Con menores contra sin menores. La diferencia descriptiva no permanece en el modelo (OR ",
               formatC(p$or_menores, format = "f", digits = 2),
-              "): los hijos llegan con la edad.")),
+              ").")),
   list(6, "El Mundo", "mundo", "#F28C28", "La clave: el lugar",
        paste0(f0(p$pueblo), "% vs ", f0(p$ciudad), "%"),
        paste0("Pueblo contra ciudad grande. El ", f0(p$sup_ciudad),
@@ -468,11 +469,11 @@ html_carta <- function(c) {
 HTML(paste0(
   '<div class="loteria-stage"><div class="loteria-contenido">',
   '<div class="loteria-titulo">La paradoja</div>',
-  '<div class="loteria-sub">Los que menos tienen, más poseen. Destapa cada carta.</div>',
+  '<div class="loteria-sub">Algunas comparaciones parecen contradictorias. Destapa cada carta para ver qué cambia al considerar el lugar.</div>',
   '<div class="lot-grid">', paste(sapply(cartas, html_carta), collapse = ""), '</div>',
   '<div id="loteria-premio"><div class="premio-tit">¡Lotería!</div>',
-  '<div>La paradoja se resuelve con el lugar: en el campo la casa se hereda o se construye; ',
-  'en la ciudad se compra.</div></div>',
+  '<div>La diferencia se entiende mejor al considerar la geografía: en localidades pequeñas predominan mecanismos de tenencia distintos a la compra de vivienda en el mercado urbano.',
+  '</div></div>',
   '</div></div>'
 ))
 ```
@@ -534,17 +535,17 @@ barras_par <- function(v0, v1, etq, mx = max(v0, v1)) {
 pctf <- function(x) paste0(f1(x), "%")
 
 temas <- list(
-  list(1, "Ingreso corriente del hogar", "Mediana al mes",
+  list(1, "Ingreso corriente del hogar", "Equivalente mensual aproximado",
        barras_par(med("ing_cor_mediana", "prop_0"), med("ing_cor_mediana", "prop_1"), peso),
        "Visto solo, casi no hay diferencia entre dueños e inquilinos.",
        paste0("<b>En el modelo:</b> al comparar parejo, más ingreso por persona sí se asocia con ser dueño (OR ", fmt_or("ing_percap_log"), ")."),
        "Ojo: el ingreso corriente de la ENIGH incluye un alquiler estimado para quien vive en casa propia."),
-  list(2, "Ingreso por trabajo", "Mediana al mes",
+  list(2, "Ingreso por trabajo", "Equivalente mensual aproximado",
        barras_par(med("ingtrab_mediana", "prop_0"), med("ingtrab_mediana", "prop_1"), peso),
        "Por su trabajo, los dueños ganan incluso un poco menos que los inquilinos.",
        "La ligera ventaja de los dueños en ingreso total no viene del sueldo.",
        ""),
-  list(3, "Gasto monetario", "Mediana al mes",
+  list(3, "Gasto monetario", "Equivalente mensual aproximado",
        barras_par(med("gasto_mon_mediana", "prop_0"), med("gasto_mon_mediana", "prop_1"), peso),
        "Los inquilinos gastan más cada mes.",
        paste0("<b>En el modelo:</b> más gasto por persona se asocia con menores momios de ser dueño (OR ", fmt_or("gasto_percap_log"), ")."),
@@ -572,7 +573,7 @@ html_tema <- function(t) sprintf(
   ifelse(t[[7]] == "", "", paste0('<p class="fin-ojo">', t[[7]], '</p>')))
 
 HTML(paste0('<div class="fin-panel">', paste(sapply(temas, html_tema), collapse = ""),
-  '<div class="fin-nota">Montos: medianas de la muestra del EDA del equipo. La ENIGH reporta montos trimestrales; aquí se dividen entre 3 para verlos al mes.</div></div>'))
+  '<div class="fin-nota">Montos: medianas de la muestra del EDA del equipo. La ENIGH reporta montos trimestrales; aquí se dividen entre 3 para obtener un equivalente mensual aproximado.</div></div>'))
 ```
 
 
@@ -617,7 +618,7 @@ or_js <- tabla_or %>%
   arrange(desc(or))
 
 HTML(paste0(
-  '<div class="mod-stage"><div class="sec-titulo">Lo que dice el modelo</div>',
+  '<div class="mod-stage"><div class="sec-titulo">¿Qué permanece cuando controlamos por todo lo demás?</div>',
   '<div class="mod-sub">Regresión logística ponderada por el diseño de la ENIGH (svyglm). ',
   'Cada punto compara los <b>momios</b> de ser dueño contra la categoría de referencia, con todo lo demás igual.</div>',
   '<div class="mod-leyenda"><span><i class="dot sube"></i>Aumenta</span><span><i class="dot baja"></i>Reduce</span>',
@@ -656,12 +657,59 @@ importancia <- paste(sprintf('<div class="imp-fila"><span>%s</span><div class="i
 
 img <- function(f) knitr::image_uri(file.path("outputs/figuras/modelo", f))
 
+# Tablas auxiliares para la pestaña "Resultados y diagnósticos"
+fmt_p_modelo <- function(x) {
+  ifelse(x < 0.001, "< 0.001", formatC(x, format = "f", digits = 3))
+}
+
+tabla_metricas_html <- paste0(
+  '<table class="tabla">',
+  '<thead><tr><th>Modelo</th><th>Accuracy</th><th>Sensibilidad</th><th>Especificidad</th><th>Precisión</th><th>AUC</th></tr></thead>',
+  '<tbody>',
+  paste(sprintf(
+    '<tr><td>%s</td><td>%.3f</td><td>%.3f</td><td>%.3f</td><td>%.3f</td><td>%.3f</td></tr>',
+    metricas$modelo, metricas$accuracy, metricas$sensibilidad, metricas$especificidad,
+    metricas$precision, metricas$auc
+  ), collapse = ""),
+  '</tbody></table>'
+)
+
+tabla_or_fmt <- tabla_or %>%
+  mutate(
+    Variable = ifelse(is.na(unname(etiquetas_or[term])), term, unname(etiquetas_or[term])),
+    p_txt = fmt_p_modelo(p.value),
+    sig_txt = ifelse(significativo, "Sí", "No")
+  ) %>%
+  select(Variable, odds_ratio, or_lower_95, or_upper_95, p_txt, sig_txt)
+
+tabla_or_html <- paste0(
+  '<table class="tabla">',
+  '<thead><tr><th>Variable</th><th>Odds ratio</th><th>IC 95% inferior</th><th>IC 95% superior</th><th>p-valor</th><th>Significativa</th></tr></thead>',
+  '<tbody>',
+  paste(sprintf(
+    '<tr><td>%s</td><td>%.2f</td><td>%.2f</td><td>%.2f</td><td>%s</td><td>%s</td></tr>',
+    tabla_or_fmt$Variable, tabla_or_fmt$odds_ratio, tabla_or_fmt$or_lower_95,
+    tabla_or_fmt$or_upper_95, tabla_or_fmt$p_txt, tabla_or_fmt$sig_txt
+  ), collapse = ""),
+  '</tbody></table>'
+)
+
+tabla_importancia_html <- paste0(
+  '<table class="tabla">',
+  '<thead><tr><th>Variable</th><th>Importancia</th></tr></thead><tbody>',
+  paste(sprintf(
+    '<tr><td>%s</td><td>%.2f</td></tr>',
+    unname(nombres_imp[t_import$variable]), t_import$importancia
+  ), collapse = ""),
+  '</tbody></table>'
+)
+
 HTML(paste0(
 '<div class="mod-panel">',
 '<div class="tabs" role="tablist">',
   '<button class="tab activo" data-tab="t1">¿Qué tan confiable?</button>',
-  '<button class="tab" data-tab="t2">Figuras del equipo</button>',
-  '<button class="tab" data-tab="t3">Cómo leerlo</button>',
+  '<button class="tab" data-tab="t2">Resultados y diagnósticos</button>',
+  '<button class="tab" data-tab="t3">Diccionario</button>',
 '</div>',
 
 '<div class="tab-cont visible" id="t1">',
@@ -683,21 +731,44 @@ HTML(paste0(
     '<button class="fig-btn activo" data-fig="f-roc">Curvas ROC</button>',
     '<button class="fig-btn" data-fig="f-arbol">Árbol</button>',
     '<button class="fig-btn" data-fig="f-cal">Calibración</button>',
+    '<button class="fig-btn" data-fig="f-tablas">Tablas</button>',
   '</div>',
   '<img class="fig-eq visible" id="f-roc" src="', img("curvas_roc.png"), '" alt="Curvas ROC de los modelos">',
   '<img class="fig-eq" id="f-arbol" src="', img("arbol_clasificacion.png"), '" alt="Árbol de clasificación">',
   '<img class="fig-eq" id="f-cal" src="', img("calibracion.png"), '" alt="Curva de calibración">',
-  '<p class="pan-nota">Figuras generadas por el equipo en modelado.R.</p>',
+
+  '<div class="fig-eq" id="f-tablas" style="background:#fff; color:#1a1a1a; padding:10px; box-sizing:border-box;">',
+    '<div style="overflow:auto; max-height:220px; margin-bottom:12px;">',
+      '<div class="pan-tit" style="color:#9B1111; margin-top:0;">Desempeño de los modelos</div>',
+      tabla_metricas_html,
+    '</div>',
+    '<div style="overflow:auto; max-height:330px; margin-bottom:12px;">',
+      '<div class="pan-tit" style="color:#9B1111; margin-top:0;">Resultados de la regresión logística ponderada</div>',
+      '<p style="font-size:12px; line-height:1.4; margin:0 0 8px;">Los odds ratios provienen del modelo ponderado por el diseño muestral de la ENIGH.</p>',
+      tabla_or_html,
+    '</div>',
+    '<div style="overflow:auto; max-height:220px;">',
+      '<div class="pan-tit" style="color:#9B1111; margin-top:0;">Importancia de variables en el árbol</div>',
+      tabla_importancia_html,
+    '</div>',
+  '</div>',
+  '<p class="pan-nota">Las figuras corresponden a los diagnósticos generados en modelado.R; las tablas muestran los resultados guardados por el equipo.</p>',
 '</div>',
 
 '<div class="tab-cont" id="t3">',
-  '<p><b>Odds ratio (OR):</b> compara los momios de ser dueño contra la categoría de referencia, manteniendo lo demás igual.</p>',
+  '<p><b>Odds ratio (OR):</b> compara los momios de ser propietario contra la categoría de referencia, manteniendo lo demás igual.</p>',
   '<p><b>OR mayor que 1:</b> aumenta los momios. Por ejemplo, OR ',
     formatC(or_de("tam_locMenos de 2,500"), format = "f", digits = 2),
-    ' en pueblos: sus momios son unas ', f1(or_de("tam_locMenos de 2,500")), ' veces los de una ciudad grande.</p>',
+    ' en localidades pequeñas: sus momios son unas ', f1(or_de("tam_locMenos de 2,500")), ' veces los de una ciudad grande.</p>',
   '<p><b>OR menor que 1:</b> los reduce. Por ejemplo, jefa mujer OR ', fmt_or("sexo_jefeMujer"), '.</p>',
-  '<p><b>Momios no es lo mismo que probabilidad:</b> momios = p / (1 - p). Un OR de 3 no significa "3 veces más probable".</p>',
-  '<p><b>Asociación, no causa:</b> el modelo describe con qué va de la mano ser dueño, no qué lo provoca.</p>',
+  '<p><b>IC 95%:</b> intervalo de confianza del 95% para el OR. Si contiene 1, el resultado no es estadísticamente significativo al 5%.</p>',
+  '<p><b>p-valor:</b> evidencia estadística contra la hipótesis nula de ausencia de asociación.</p>',
+  '<p><b>AUC:</b> mide la capacidad del modelo para discriminar entre propietarios y no propietarios.</p>',
+  '<p><b>Exactitud:</b> proporción de observaciones clasificadas correctamente con el umbral utilizado.</p>',
+  '<p><b>Sensibilidad:</b> proporción de propietarios identificados correctamente.</p>',
+  '<p><b>Especificidad:</b> proporción de no propietarios identificados correctamente.</p>',
+  '<p><b>Modelo ponderado:</b> regresión logística ajustada considerando UPM, estratos y factores de expansión de la ENIGH.</p>',
+  '<p><b>Asociación, no causalidad:</b> el modelo describe relaciones estadísticas observadas; no demuestra qué provoca la propiedad de vivienda.</p>',
 '</div>',
 '</div>'
 ))
@@ -730,8 +801,11 @@ angel <- '<svg class="angel" viewBox="0 0 160 420" aria-hidden="true"><g fill="#
 <rect x="20" y="390" width="120" height="22" rx="3"/>
 </g><path d="M76 150V340M84 150V340" stroke="#5A2E0E" stroke-width="1.5"/></svg>'
 
-opciones_estados <- paste(sprintf('<option value="%s"%s>%s</option>', estados$region[order(estados$nombre)],
-  ifelse(sort(estados$nombre) == "Ciudad de México", " selected", ""), sort(estados$nombre)), collapse = "")
+orden_estados <- order(estados$nombre)
+opciones_estados <- paste(sprintf('<option value="%s"%s>%s</option>',
+  estados$id[orden_estados],
+  ifelse(estados$nombre[orden_estados] == "Ciudad de México", " selected", ""),
+  estados$nombre[orden_estados]), collapse = "")
 
 HTML(paste0(
 '<div class="sim-stage">', angel,
@@ -744,7 +818,7 @@ HTML(paste0(
   '<label><span>Edad del jefe(a) del hogar: <b id="v-edad">25</b> años</span><input type="range" id="i-edad" min="18" max="39" value="25"></label>',
   '<div class="campo">Sexo<div class="seg" data-campo="sexo"><button type="button" class="activo" data-v="Hombre">Hombre</button><button type="button" data-v="Mujer">Mujer</button></div></div>',
   '<label><span>Escolaridad</span><select id="i-edu"><option value="Basica o menos">Básica o menos</option><option value="Secundaria completa">Secundaria completa</option><option value="Media superior">Preparatoria</option><option value="Superior" selected>Universidad o más</option></select></label>',
-  '<label><span>Estado</span><select id="i-estado">', opciones_estados, '</select></label>',
+  '<label><span>Estado</span><select id="i-estado">', opciones_estados, '</select><small style="display:block;margin-top:4px;color:#9E938C;font-size:10px;">El estado se traduce a la región utilizada por el modelo.</small></label>',
   '<div class="campo">Tamaño de la localidad<div class="seg" data-campo="loc">',
     '<button type="button" data-v="Menos de 2,500">Pueblo</button><button type="button" data-v="2,500 a 14,999">2.5-15 mil</button>',
     '<button type="button" data-v="15 mil a 99,999">15-100 mil</button><button type="button" class="activo" data-v="100 mil o mas">Ciudad</button></div></div>',
@@ -770,6 +844,89 @@ HTML(paste0(
 ```
 
 
+
+Conclusión {#conclusion}
+=====================================
+
+Row
+-------------------------------------
+
+### {.no-title .pantalla-completa}
+
+```{r conclusion}
+loc_pequena <- t_tamanio$pct_propietario_pond[t_tamanio$tam_loc == "Menos de 2,500"]
+loc_grande <- t_tamanio$pct_propietario_pond[t_tamanio$tam_loc == "100 mil o mas"]
+or_localidad <- tabla_or$odds_ratio[tabla_or$term == "tam_locMenos de 2,500"]
+or_edad <- tabla_or$odds_ratio[tabla_or$term == "grupo_edad30-39"]
+or_ingreso <- tabla_or$odds_ratio[tabla_or$term == "ing_percap_log"]
+or_gasto <- tabla_or$odds_ratio[tabla_or$term == "gasto_percap_log"]
+or_educa <- tabla_or$odds_ratio[tabla_or$term == "educa_grupoSuperior"]
+or_sexo <- tabla_or$odds_ratio[tabla_or$term == "sexo_jefeMujer"]
+
+HTML(paste0(
+  '<div class="conclusion-stage">',
+    '<div class="conclusion-contenido">',
+      '<div class="sec-titulo oscuro">¿Qué nos llevamos del análisis?</div>',
+      '<p class="conclusion-intro">La propiedad de vivienda entre hogares con jefatura de 18–39 años no se relaciona con una sola característica. Los resultados apuntan a una combinación de territorio, etapa de vida, condiciones económicas y características del hogar.</p>',
+      '<div class="conclusion-grid">',
+
+        '<div class="conclusion-card">',
+          '<div class="conclusion-num">01</div>',
+          '<h3>El lugar marca la mayor brecha</h3>',
+          '<p>', f1(loc_pequena), '% de propiedad en localidades de menos de 2,500 habitantes frente a ', f1(loc_grande), '% en localidades de 100 mil o más.</p>',
+          '<span class="conclusion-dato">OR ', formatC(or_localidad, format="f", digits=2), '</span>',
+          '<small>localidad &lt;2,500 vs. 100 mil+</small>',
+        '</div>',
+
+        '<div class="conclusion-card">',
+          '<div class="conclusion-num">02</div>',
+          '<h3>La edad marca una transición</h3>',
+          '<p>La propiedad ponderada pasa de ', f1(p_18_29), '% entre 18–29 años a ', f1(p_30_39), '% entre 30–39.</p>',
+          '<span class="conclusion-dato">+', f1(p_30_39 - p_18_29), ' puntos</span>',
+          '<small>OR de 30–39 vs. 18–29 = ', formatC(or_edad, format="f", digits=2), '</small>',
+        '</div>',
+
+        '<div class="conclusion-card">',
+          '<div class="conclusion-num">03</div>',
+          '<h3>El dinero importa al analizarlo en conjunto</h3>',
+          '<p>El ingreso per cápita se asocia positivamente con la propiedad, mientras que el gasto per cápita presenta una asociación negativa al controlar por el resto de características.</p>',
+          '<span class="conclusion-dato">OR ', formatC(or_ingreso, format="f", digits=2), ' / ', formatC(or_gasto, format="f", digits=2), '</span>',
+          '<small>variables económicas transformadas y expresadas por persona</small>',
+        '</div>',
+
+        '<div class="conclusion-card">',
+          '<div class="conclusion-num">04</div>',
+          '<h3>Las comparaciones simples pueden cambiar</h3>',
+          '<p>La educación superior muestra una menor proporción descriptiva de propiedad, pero se asocia con mayores momios después de controlar por ubicación y otras variables.</p>',
+          '<span class="conclusion-dato">OR ', formatC(or_educa, format="f", digits=2), '</span>',
+          '<small>educación superior vs. básica o menos</small>',
+        '</div>',
+
+        '<div class="conclusion-card">',
+          '<div class="conclusion-num">05</div>',
+          '<h3>La brecha por sexo permanece</h3>',
+          '<p>La tasa ponderada es ', f1(p_mujer), '% para hogares con jefa mujer y ', f1(p_hombre), '% para hogares con jefe hombre. La diferencia permanece en el modelo.</p>',
+          '<span class="conclusion-dato">OR ', formatC(or_sexo, format="f", digits=2), '</span>',
+          '<small>jefa mujer vs. hombre</small>',
+        '</div>',
+
+        '<div class="conclusion-card destacado">',
+          '<div class="conclusion-num">06</div>',
+          '<h3>La logística ofrece interpretabilidad con desempeño moderado</h3>',
+          '<p>La regresión logística discrimina de forma moderada y queda muy cerca del Random Forest, pero permite interpretar directamente las asociaciones mediante odds ratios.</p>',
+          '<span class="conclusion-dato">AUC ', formatC(m_log$auc, format="f", digits=3), '</span>',
+          '<small>Logística: prueba 0.707 · Random Forest: 0.716</small>',
+        '</div>',
+
+      '</div>',
+      '<div class="conclusion-cierre">',
+        '<b>Conclusión principal.</b> La propiedad observada de vivienda entre hogares con jefatura de 18–39 años está asociada con una combinación de características demográficas, económicas y territoriales. El tamaño de localidad y la edad concentran las asociaciones más marcadas. El análisis es transversal y describe asociaciones; no demuestra causalidad ni mide directamente la asequibilidad de comprar una vivienda.',
+      '</div>',
+    '</div>',
+  '</div>'
+))
+```
+
 Métodos y datos {#metodo .hidden}
 =====================================
 
@@ -780,13 +937,14 @@ Row
 
 ```{r metodos}
 fuentes <- data.frame(
-  seccion = c("¿Quién es dueño?", "Locación", "La paradoja", "Finanzas", "Modelo", "Simulador"),
+  seccion = c("¿Quién es dueño?", "Locación", "La paradoja", "Finanzas", "Modelo", "Simulador", "Conclusión"),
   equipo  = c("% por sexo y edad (EDA.R)", "% por tamaño de localidad (EDA.R)",
               "% por estrato y localidad (EDA.R); OR del modelo", "Medianas de ingreso y gasto (EDA.R); OR del modelo",
-              "Odds ratios, métricas, importancia y figuras (modelado.R)", "Definiciones y referencias de modelado.R"),
+              "Odds ratios, métricas, importancia y figuras (modelado.R)", "Definiciones y referencias de modelado.R",
+              "Síntesis de hallazgos del EDA y modelado.R"),
   base    = c("Pastel por sexo y tipo de tenencia", "% por estado y región; edad × localidad",
               "Educación, menores y dónde viven", "% con pagos de deuda y tarjeta", "—",
-              "Modelo simplificado reestimado con svyglm")
+              "Modelo simplificado reestimado con svyglm", "Conclusiones integradas del reporte")
 )
 tabla_fuentes <- paste0('<table class="tabla"><thead><tr><th>Sección</th><th>Del equipo</th><th>Calculado con la base</th></tr></thead><tbody>',
   paste(sprintf('<tr><td>%s</td><td>%s</td><td>%s</td></tr>', fuentes$seccion, fuentes$equipo, fuentes$base), collapse = ""),
@@ -866,14 +1024,31 @@ tagList(
     return h === "" ? "intro" : h;
   }
   function actualizar() {
-    var oculta = sinBarra.indexOf(paginaActual()) >= 0;
-    document.body.classList.toggle("sin-nav", oculta);
+    var pagina = paginaActual();
+    var oculta = sinBarra.indexOf(pagina) >= 0;
     var barra = document.querySelector(".navbar");
-    document.body.style.paddingTop = (oculta || !barra) ? "0px" : barra.offsetHeight + "px";
+    document.body.classList.toggle("sin-nav", oculta);
+    if (barra) {
+      barra.style.display = oculta ? "none" : "";
+      document.body.style.paddingTop = oculta ? "0px" : barra.offsetHeight + "px";
+    } else {
+      document.body.style.paddingTop = "0px";
+    }
     window.dispatchEvent(new Event("resize"));
   }
   window.addEventListener("hashchange", actualizar);
-  document.addEventListener("DOMContentLoaded", actualizar);
+  window.addEventListener("popstate", actualizar);
+  document.addEventListener("click", function (e) {
+    var enlace = e.target.closest ? e.target.closest("a") : null;
+    if (enlace && enlace.getAttribute("href") && enlace.getAttribute("href").charAt(0) === "#") {
+      setTimeout(actualizar, 50);
+    }
+  });
+  document.addEventListener("DOMContentLoaded", function () {
+    actualizar();
+    setTimeout(actualizar, 300);
+  });
+  window.addEventListener("load", actualizar);
 })();
 
 /* ============================================================
@@ -979,8 +1154,12 @@ document.addEventListener("DOMContentLoaded", function () {
   var peso = function (v) { return "$" + Math.round(v).toLocaleString("es-MX"); };
 
   function perfil() {
-    return { edad: +el("i-edad").value, sexo: seg("sexo"), edu: el("i-edu").value, region: el("i-estado").value,
-             loc: seg("loc"), integ: +el("i-integ").value, ocup: +el("i-ocup").value, ing: +el("i-ing").value, deuda: seg("deuda") };
+    var estado = el("i-estado").value;
+    var info = (window.ESTADOS || []).find(function (e) { return e.id === estado; });
+    return { edad: +el("i-edad").value, sexo: seg("sexo"), edu: el("i-edu").value,
+             estado: estado, region: info ? info.region : "Centro",
+             loc: seg("loc"), integ: +el("i-integ").value, ocup: +el("i-ocup").value,
+             ing: +el("i-ing").value, deuda: seg("deuda") };
   }
   function prob(p) {
     var z = coef("(Intercept)");
